@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    template: '<app-shell></app-shell>',
+    styles: [
+        `
+            :host {
+                display: block;
+            }
+        `,
+    ],
 })
 export class AppComponent {
-  title = 'ng-dynamic-shapes';
+    constructor(private title: Title) {
+        this.title.setTitle('Dynamic Shapes');
+    }
 }
