@@ -20,7 +20,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
                 height: auto;
                 display: grid;
                 grid-template-rows: auto 1fr auto;
-                border: 10px solid red;
             }
         `,
     ],

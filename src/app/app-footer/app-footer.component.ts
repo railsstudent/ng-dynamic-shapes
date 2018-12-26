@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
                     <p>Made by Connie Leung @2018</p>
                     <p>Github: @railsstudent</p>
                     <p>Version: 0.0.1</p>
-                    <p>*Powered by Angular 7*</p>
+                    <p>Powered by Angular 7</p>
                 </mat-card-content>
             </mat-card>
         </ng-container>

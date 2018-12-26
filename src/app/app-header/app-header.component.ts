@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { fromEvent, merge, Subject } from 'rxjs';
-import { map, mapTo, scan, startWith, takeUntil } from 'rxjs/operators';
+import { empty, fromEvent, merge, Subject } from 'rxjs';
+import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-header',
@@ -35,6 +35,8 @@ import { map, mapTo, scan, startWith, takeUntil } from 'rxjs/operators';
                     >
                         Add Square<mat-icon>add</mat-icon>
                     </button>
+                    <button id="resume" mat-raised-button color="accent">Resume</button>
+                    <button id="pause" mat-raised-button color="warn">Pause</button>
                 </mat-card-actions>
             </mat-card-content>
         </mat-card>
@@ -94,19 +96,30 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         const squareClick$ = fromEvent(document.getElementById('square'), 'click').pipe(
             mapTo(1),
             scan((acc, one) => acc + one, 0),
-            map(c => ({ square: c })),
+            map(c => ({
+                square: c,
+            })),
             takeUntil(this.unsubscribe$),
         );
 
-        merge(circleClick$, triangleClick$, squareClick$)
+        const increment$ = merge(circleClick$, triangleClick$, squareClick$).pipe(
+            scan(
+                (acc, curr) => {
+                    return { ...acc, ...curr };
+                },
+                { circle: 0, triangle: 0, square: 0 },
+            ),
+            shareReplay(1),
+        );
+
+        const resume$ = fromEvent(document.getElementById('resume'), 'click').pipe(mapTo(true));
+        const pause$ = fromEvent(document.getElementById('pause'), 'click').pipe(mapTo(false));
+
+        merge(resume$, pause$)
             .pipe(
-                startWith({ circle: 0, triangle: 0, square: 0 }),
-                scan(
-                    (acc, curr) => {
-                        return { ...acc, ...curr };
-                    },
-                    { circle: 0, triangle: 0, square: 0 },
-                ),
+                startWith(true),
+                switchMap(action => (action ? increment$ : empty())),
+                tap(r => console.log('counter', r)),
             )
             .subscribe(r => {
                 this.shapeCounter = r;
