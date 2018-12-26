@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
     template: `
         <div class="container">
             <app-header></app-header>
-            <div>main content</div>
+            <app-main></app-main>
             <app-footer></app-footer>
         </div>
     `,
