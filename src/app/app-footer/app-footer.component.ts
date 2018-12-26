@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-footer',
@@ -61,9 +61,6 @@ export class AppFooterComponent implements OnInit {
     constructor(private breakpointObserver: BreakpointObserver) {}
 
     ngOnInit() {
-        this.isSmallScreen$ = this.breakpointObserver.observe(['(max-width: 599px)']).pipe(
-            map(match => match.matches),
-            tap(r => console.log(r)),
-        );
+        this.isSmallScreen$ = this.breakpointObserver.observe(['(max-width: 599px)']).pipe(map(match => match.matches));
     }
 }
