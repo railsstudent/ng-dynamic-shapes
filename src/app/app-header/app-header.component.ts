@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { empty, fromEvent, merge, Subject } from 'rxjs';
+import { EMPTY, fromEvent, merge, Subject } from 'rxjs';
 import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
@@ -118,7 +118,7 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         merge(resume$, pause$)
             .pipe(
                 startWith(true),
-                switchMap(action => (action ? increment$ : empty())),
+                switchMap(action => (action ? increment$ : EMPTY)),
                 tap(r => console.log('counter', r)),
             )
             .subscribe(r => {
