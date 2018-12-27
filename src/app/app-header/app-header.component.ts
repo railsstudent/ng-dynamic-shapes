@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, fromEvent, merge, Subject } from 'rxjs';
 import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IShape, Shape, ShapeService } from '../services/shape.service';
 
 @Component({
     selector: 'app-header',
@@ -70,7 +71,7 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         square: 0,
     };
 
-    constructor(private cd: ChangeDetectorRef) {}
+    constructor(private cd: ChangeDetectorRef, private service: ShapeService) {}
 
     ngOnInit() {}
 
@@ -81,6 +82,10 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
             map(c => ({
                 circle: c,
             })),
+            tap(() => {
+                const shape: IShape = { shape: Shape.CIRCLE, color: '#ff0000' };
+                this.service.appendShape(shape);
+            }),
             takeUntil(this.unsubscribe$),
         );
 

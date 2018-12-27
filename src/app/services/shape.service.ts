@@ -14,12 +14,12 @@ export interface IShape {
 
 @Injectable({ providedIn: 'root' })
 export class ShapeService {
-    private shapeSub$ = new Subject<Shape>();
+    private shapeSub$ = new Subject<IShape>();
     shape$ = this.shapeSub$.asObservable();
 
     constructor() {}
 
-    appendShape(shape: Shape) {
+    appendShape(shape: IShape) {
         this.shapeSub$.next(shape);
     }
 }

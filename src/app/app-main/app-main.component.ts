@@ -11,6 +11,6 @@ export class AppMainComponent implements OnInit {
     constructor(private shapeService: ShapeService) {}
 
     ngOnInit() {
-        this.shapeService.shape$.subscribe();
+        this.shapeService.shape$.subscribe(p => console.log(p));
     }
 }
