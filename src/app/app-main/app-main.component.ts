@@ -47,6 +47,16 @@ export class AppMainComponent implements OnInit, OnDestroy {
             this.circleList = ll;
             this.cd.markForCheck();
         });
+
+        this.shapeService.triangle$.pipe(takeUntil(this.unsubscribe$)).subscribe(ll => {
+            this.triangleList = ll;
+            this.cd.markForCheck();
+        });
+
+        this.shapeService.square$.pipe(takeUntil(this.unsubscribe$)).subscribe(ll => {
+            this.squareList = ll;
+            this.cd.markForCheck();
+        });
     }
 
     ngOnDestroy() {
