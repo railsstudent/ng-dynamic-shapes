@@ -77,32 +77,68 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         const circleClick$ = fromEvent(document.getElementById('circle'), 'click').pipe(
-            mapTo(1),
-            scan((acc, one) => acc + one, 0),
-            map(c => ({
-                circle: c,
+            map(() => '#ff0000'),
+            map(color => ({ shape: Shape.CIRCLE, color })),
+            map((shape: IShape) => ({ list: [shape] })),
+            scan(
+                (acc, shape) => {
+                    const { list } = shape;
+                    return {
+                        count: acc.count + 1,
+                        list: [...acc.list, ...list],
+                    };
+                },
+                { count: 0, list: [] },
+            ),
+            map(result => ({
+                circle: result.count,
+                circleList: result.list,
             })),
-            tap(() => {
-                const shape: IShape = { shape: Shape.CIRCLE, color: '#ff0000' };
-                this.service.appendShape(shape);
-            }),
+            tap(r => console.log('circleTally$', r)),
             takeUntil(this.unsubscribe$),
         );
 
         const triangleClick$ = fromEvent(document.getElementById('triangle'), 'click').pipe(
-            mapTo(1),
-            scan((acc, one) => acc + one, 0),
-            map(c => ({
-                triangle: c,
+            map(() => '#00ff00'),
+            map(color => ({
+                shape: Shape.TRIANGLE,
+                color,
             })),
+            map((shape: IShape) => ({ count: 1, list: [shape] })),
+            scan(
+                (acc, shape) => {
+                    const { count, list } = shape;
+                    return {
+                        count: acc.count + count,
+                        list: [...acc.list, ...list],
+                    };
+                },
+                { count: 0, list: [] },
+            ),
+            map(result => ({ triangle: result.count, triangleList: result.list })),
             takeUntil(this.unsubscribe$),
         );
 
         const squareClick$ = fromEvent(document.getElementById('square'), 'click').pipe(
-            mapTo(1),
-            scan((acc, one) => acc + one, 0),
-            map(c => ({
-                square: c,
+            map(() => '#0000ff'),
+            map(color => ({
+                shape: Shape.SQUARE,
+                color,
+            })),
+            map((shape: IShape) => ({ count: 1, list: [shape] })),
+            scan(
+                (acc, shape) => {
+                    const { count, list } = shape;
+                    return {
+                        count: acc.count + count,
+                        list: [...acc.list, ...list],
+                    };
+                },
+                { count: 0, list: [] },
+            ),
+            map(result => ({
+                square: result.count,
+                squareList: result.list,
             })),
             takeUntil(this.unsubscribe$),
         );
@@ -112,7 +148,14 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
                 (acc, curr) => {
                     return { ...acc, ...curr };
                 },
-                { circle: 0, triangle: 0, square: 0 },
+                {
+                    circle: 0,
+                    circleList: [] as IShape[],
+                    triangle: 0,
+                    triangleList: [] as IShape[],
+                    square: 0,
+                    squareList: [] as IShape[],
+                },
             ),
             shareReplay(1),
         );
@@ -126,8 +169,10 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
                 switchMap(action => (action ? increment$ : EMPTY)),
                 tap(r => console.log('counter', r)),
             )
-            .subscribe(r => {
-                this.shapeCounter = r;
+            .subscribe(results => {
+                const { circle, square, triangle, circleList } = results;
+                this.shapeCounter = { circle, square, triangle };
+                this.service.setCircleList(circleList);
                 this.cd.markForCheck();
             });
     }

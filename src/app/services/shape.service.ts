@@ -14,12 +14,12 @@ export interface IShape {
 
 @Injectable({ providedIn: 'root' })
 export class ShapeService {
-    private shapeSub$ = new Subject<IShape>();
-    shape$ = this.shapeSub$.asObservable();
+    private circleSub$ = new Subject<IShape[]>();
+    circle$ = this.circleSub$.asObservable();
 
     constructor() {}
 
-    appendShape(shape: IShape) {
-        this.shapeSub$.next(shape);
+    setCircleList(circles: IShape[]) {
+        this.circleSub$.next(circles);
     }
 }
