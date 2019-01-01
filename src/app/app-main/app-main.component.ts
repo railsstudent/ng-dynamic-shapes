@@ -9,29 +9,76 @@ import { IShape, ShapeService } from '../services/shape.service';
         <div class="container">
             <div class="title">Circle</div>
             <div class="list">
-                <ng-container *ngFor="let c of circleList">
-                    <div class="item">{{ c.shape }}, {{ c.color }}</div>
-                </ng-container>
+                <div class="item" *ngFor="let c of circleList">
+                    <div class="{{ c.shape }}" [style.background]="c.color"></div>
+                </div>
             </div>
         </div>
         <div class="container">
             <div class="title">Triangle</div>
             <div class="list">
-                <ng-container *ngFor="let c of triangleList">
-                    <div class="item">{{ c.shape }}, {{ c.color }}</div>
-                </ng-container>
+                <div class="item" *ngFor="let c of triangleList">
+                    <div class="{{ c.shape }}" [style.border-bottom-color]="c.color"></div>
+                </div>
             </div>
         </div>
         <div class="container">
             <div class="title">Square</div>
             <div class="list">
-                <ng-container *ngFor="let c of squareList">
-                    <div class="item">{{ c.shape }}, {{ c.color }}</div>
-                </ng-container>
+                <div class="item" *ngFor="let c of squareList">
+                    <div class="{{ c.shape }}" [style.background]="c.color"></div>
+                </div>
             </div>
         </div>
     `,
-    styleUrls: ['./app-main.component.scss'],
+    styles: [
+        `
+            :host {
+                display: grid;
+                grid-template-rows: repeat(3, 1fr);
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                padding: 0.5rem 1rem;
+            }
+
+            .container .title {
+                text-decoration: underline;
+                color: darkmagenta;
+            }
+
+            .list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, 5em);
+                grid-auto-rows: 5em;
+                grid-gap: 3px;
+            }
+
+            .list .item {
+                width: 100%;
+                height: 100%;
+            }
+
+            .circle {
+                height: 100%;
+                border-radius: 50%;
+            }
+
+            .square {
+                height: 100%;
+            }
+
+            .triangle {
+                width: 0;
+                height: 0;
+                border-left: 2.4em solid transparent;
+                border-right: 2.4em solid transparent;
+                border-bottom: 4.8em solid black;
+            }
+        `,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppMainComponent implements OnInit, OnDestroy {

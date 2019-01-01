@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, fromEvent, merge, Subject } from 'rxjs';
-import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { IShape, Shape, ShapeService } from '../services/shape.service';
+import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { IShape, RandomColorService, Shape, ShapeService } from '../services/';
 
 @Component({
     selector: 'app-header',
@@ -71,75 +71,57 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         square: 0,
     };
 
-    constructor(private cd: ChangeDetectorRef, private service: ShapeService) {}
+    constructor(
+        private cd: ChangeDetectorRef,
+        private service: ShapeService,
+        private randomColor: RandomColorService,
+    ) {}
 
     ngOnInit() {}
 
     ngAfterViewInit() {
         const circleClick$ = fromEvent(document.getElementById('circle'), 'click').pipe(
-            map(() => '#ff0000'),
-            map(color => ({ shape: Shape.CIRCLE, color })),
-            map((shape: IShape) => ({ list: [shape] })),
-            scan(
-                (acc, shape) => {
-                    const { list } = shape;
-                    return {
-                        count: acc.count + 1,
-                        list: [...acc.list, ...list],
-                    };
-                },
-                { count: 0, list: [] },
+            map(() =>
+                this.randomColor.get_random_color({
+                    luminosity: 'dark',
+                    format: 'rgb',
+                }),
             ),
-            map(result => ({
-                circle: result.count,
-                circleList: result.list,
-            })),
-            tap(r => console.log('circleTally$', r)),
+            map(color => ({ shape: Shape.CIRCLE, color })),
+            scan((acc: IShape[], shape: IShape) => acc.concat(shape), []),
+            map(l => ({ circleList: l })),
             takeUntil(this.unsubscribe$),
         );
 
         const triangleClick$ = fromEvent(document.getElementById('triangle'), 'click').pipe(
-            map(() => '#00ff00'),
+            map(() =>
+                this.randomColor.get_random_color({
+                    luminosity: 'dark',
+                    format: 'rgb',
+                }),
+            ),
             map(color => ({
                 shape: Shape.TRIANGLE,
                 color,
             })),
-            map((shape: IShape) => ({ count: 1, list: [shape] })),
-            scan(
-                (acc, shape) => {
-                    const { count, list } = shape;
-                    return {
-                        count: acc.count + count,
-                        list: [...acc.list, ...list],
-                    };
-                },
-                { count: 0, list: [] },
-            ),
-            map(result => ({ triangle: result.count, triangleList: result.list })),
+            scan((acc: IShape[], shape: IShape) => acc.concat(shape), []),
+            map(l => ({ triangleList: l })),
             takeUntil(this.unsubscribe$),
         );
 
         const squareClick$ = fromEvent(document.getElementById('square'), 'click').pipe(
-            map(() => '#0000ff'),
+            map(() =>
+                this.randomColor.get_random_color({
+                    luminosity: 'dark',
+                    format: 'rgb',
+                }),
+            ),
             map(color => ({
                 shape: Shape.SQUARE,
                 color,
             })),
-            map((shape: IShape) => ({ count: 1, list: [shape] })),
-            scan(
-                (acc, shape) => {
-                    const { count, list } = shape;
-                    return {
-                        count: acc.count + count,
-                        list: [...acc.list, ...list],
-                    };
-                },
-                { count: 0, list: [] },
-            ),
-            map(result => ({
-                square: result.count,
-                squareList: result.list,
-            })),
+            scan((acc: IShape[], shape: IShape) => acc.concat(shape), []),
+            map(l => ({ squareList: l })),
             takeUntil(this.unsubscribe$),
         );
 
@@ -149,11 +131,8 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
                     return { ...acc, ...curr };
                 },
                 {
-                    circle: 0,
                     circleList: [] as IShape[],
-                    triangle: 0,
                     triangleList: [] as IShape[],
-                    square: 0,
                     squareList: [] as IShape[],
                 },
             ),
@@ -167,18 +146,10 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(
                 startWith(true),
                 switchMap(action => (action ? increment$ : EMPTY)),
-                tap(r => console.log('counter', r)),
             )
             .subscribe(results => {
-                const {
-                    circle,
-                    square,
-                    triangle,
-                    circleList: circles,
-                    triangleList: triangles,
-                    squareList: squares,
-                } = results;
-                this.shapeCounter = { circle, square, triangle };
+                const { circleList: circles, triangleList: triangles, squareList: squares } = results;
+                this.shapeCounter = { circle: circles.length, square: squares.length, triangle: triangles.length };
                 this.service.setShapeList({ circles, triangles, squares });
                 this.cd.markForCheck();
             });

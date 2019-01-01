@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 export enum Shape {
-    CIRCLE,
-    TRIANGLE,
-    SQUARE,
+    CIRCLE = 'circle',
+    TRIANGLE = 'triangle',
+    SQUARE = 'square',
 }
 
 export interface IShape {

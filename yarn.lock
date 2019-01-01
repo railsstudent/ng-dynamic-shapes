@@ -360,11 +360,6 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-0.0.32.tgz#bd284e57c84f1325da702babfc82a5328190c0c5"
   integrity sha1-vShOV8hPEyXacCur/IKlMoGQwMU=
 
-"@types/randomcolor@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@types/randomcolor/-/randomcolor-0.4.3.tgz#66bf69fdf43ea7b73ae4c378f660442c8e236e93"
-  integrity sha1-Zr9p/fQ+p7c65MN49mBELI4jbpM=
-
 "@types/selenium-webdriver@^3.0.0":
   version "3.0.14"
   resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-3.0.14.tgz#0b20a2370e6b1b8322c9c3dfcaa409e6c7c0c0a9"
@@ -5863,11 +5858,6 @@ randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   integrity sha512-CIQ5OFxf4Jou6uOKe9t1AOgqpeU5fd70A8NPdHSGeYXqXsPe6peOwI0cUl88RWZ6sP1vPMV3avd/R6cZ5/sP1A==
   dependencies:
     safe-buffer "^5.1.0"
-
-randomcolor@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
-  integrity sha1-f5Dy8qf21aUiMhYe6u6uqaw7WBU=
 
 randomfill@^1.0.3:
   version "1.0.4"
