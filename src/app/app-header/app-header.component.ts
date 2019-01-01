@@ -6,41 +6,39 @@ import { IShape, RandomColorService, Shape, ShapeService } from '../services/';
 @Component({
     selector: 'app-header',
     template: `
-        <mat-card class="mat-elevation-z4">
-            <mat-card-content>
-                <mat-card-actions>
-                    <button
-                        id="circle"
-                        mat-raised-button
-                        color="primary"
-                        matBadge="{{ shapeCounter.circle }}"
-                        matBadgeColor="accent"
-                    >
-                        Add Circle<mat-icon>add</mat-icon>
-                    </button>
-                    <button
-                        id="triangle"
-                        mat-raised-button
-                        color="accent"
-                        matBadge="{{ shapeCounter.triangle }}"
-                        matBadgeColor="primary"
-                    >
-                        Add Triangle<mat-icon>add</mat-icon>
-                    </button>
-                    <button
-                        id="square"
-                        mat-raised-button
-                        color="primary"
-                        matBadge="{{ shapeCounter.square }}"
-                        matBadgeColor="accent"
-                    >
-                        Add Square<mat-icon>add</mat-icon>
-                    </button>
-                    <button id="resume" mat-raised-button color="accent">Resume</button>
-                    <button id="pause" mat-raised-button color="warn">Pause</button>
-                </mat-card-actions>
-            </mat-card-content>
-        </mat-card>
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+                <button
+                    id="circle"
+                    mat-raised-button
+                    color="default"
+                    matBadge="{{ shapeCounter.circle }}"
+                    matBadgeColor="accent"
+                >
+                    Add Circle<mat-icon>add</mat-icon>
+                </button>
+                <button
+                    id="triangle"
+                    mat-raised-button
+                    color="accent"
+                    matBadge="{{ shapeCounter.triangle }}"
+                    matBadgeColor="warn"
+                >
+                    Add Triangle<mat-icon>add</mat-icon>
+                </button>
+                <button
+                    id="square"
+                    mat-raised-button
+                    color="default"
+                    matBadge="{{ shapeCounter.square }}"
+                    matBadgeColor="accent"
+                >
+                    Add Square<mat-icon>add</mat-icon>
+                </button>
+                <button id="resume" mat-raised-button color="accent">Resume</button>
+                <button id="pause" mat-raised-button color="warn">Pause</button>
+            </mat-toolbar-row>
+        </mat-toolbar>
     `,
     styles: [
         `
@@ -48,15 +46,20 @@ import { IShape, RandomColorService, Shape, ShapeService } from '../services/';
                 display: block;
             }
 
-            mat-card-actions {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            mat-toolbar {
+                height: auto;
             }
 
-            mat-card-actions > button {
-                margin-left: 0;
-                margin-right: 1rem !important;
-                margin-bottom: 0.5rem !important;
+            mat-toolbar-row {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+                height: auto;
+                padding: 10px;
+            }
+
+            mat-toolbar-row > button {
+                flex: 1 1 auto;
+                margin: 0.5rem;
             }
         `,
     ],
