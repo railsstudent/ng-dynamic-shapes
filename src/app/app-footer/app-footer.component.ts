@@ -2,33 +2,16 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IFooter } from '.';
 
 @Component({
     selector: 'app-footer',
     template: `
         <ng-container *ngIf="(isSmallScreen$ | async); else web">
-            <mat-card class="mat-elevation-z4">
-                <mat-card-content class="container small">
-                    <p>Made by Connie Leung @2018</p>
-                    <p>Github: @railsstudent</p>
-                    <p>Version: 0.0.1</p>
-                    <p>Powered by Angular 7</p>
-                </mat-card-content>
-            </mat-card>
+            <app-footer-small [data]="data"></app-footer-small>
         </ng-container>
 
-        <ng-template #web>
-            <mat-card class="mat-elevation-z4">
-                <mat-card-content class="container">
-                    <div>
-                        <p>Made by Connie Leung @2018</p>
-                        <p>Github: @railsstudent</p>
-                    </div>
-                    <p>Version: 0.0.1</p>
-                    <p>Powered by Angular 7</p>
-                </mat-card-content>
-            </mat-card>
-        </ng-template>
+        <ng-template #web> <app-footer-large [data]="data"></app-footer-large> </ng-template>
     `,
     styles: [
         `
@@ -57,6 +40,13 @@ import { map } from 'rxjs/operators';
 })
 export class AppFooterComponent implements OnInit {
     isSmallScreen$: Observable<boolean>;
+
+    data: IFooter = {
+        copyright: 'Made by Connie Leung @2019',
+        github: '@railsstudent',
+        version: '0.0.1',
+        powerby: 'Angular 7',
+    };
 
     constructor(private breakpointObserver: BreakpointObserver) {}
 
