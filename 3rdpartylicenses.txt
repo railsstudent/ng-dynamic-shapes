@@ -319,6 +319,9 @@ MIT
 @angular/common
 MIT
 
+@angular/platform-browser
+MIT
+
 @angular/cdk
 MIT
 The MIT License
@@ -344,10 +347,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-@angular/platform-browser
-MIT
-
-@angular/material/card
+@angular/material/toolbar
 
 @angular/animations
 MIT
@@ -355,6 +355,8 @@ MIT
 @angular/material/button
 
 @angular/material/icon
+
+@angular/material/card
 
 zone.js
 MIT
