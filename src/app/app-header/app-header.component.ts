@@ -170,9 +170,16 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
                 tap(r => console.log('counter', r)),
             )
             .subscribe(results => {
-                const { circle, square, triangle, circleList } = results;
+                const {
+                    circle,
+                    square,
+                    triangle,
+                    circleList: circles,
+                    triangleList: triangles,
+                    squareList: squares,
+                } = results;
                 this.shapeCounter = { circle, square, triangle };
-                this.service.setCircleList(circleList);
+                this.service.setShapeList({ circles, triangles, squares });
                 this.cd.markForCheck();
             });
     }
