@@ -7,7 +7,7 @@ import { IFooter } from '.';
         <mat-card class="mat-elevation-z4">
             <mat-card-content class="container small">
                 <p>{{ data.copyright }}</p>
-                <p>Github: {{ data.github }}</p>
+                <p>Github: <a [href]="data.github" target="_blank">Code</a></p>
                 <p>Version: {{ data.version }}</p>
                 <p>Powered by {{ data.powerby }}</p>
             </mat-card-content>

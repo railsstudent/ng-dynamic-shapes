@@ -43,8 +43,8 @@ export class AppFooterComponent implements OnInit {
 
     data: IFooter = {
         copyright: 'Made by Connie Leung @2019',
-        github: '@railsstudent',
-        version: '0.0.1',
+        github: 'https://github.com/railsstudent/ng-dynamic-shapes',
+        version: '0.0.2',
         powerby: 'Angular 7',
     };
 

@@ -8,7 +8,7 @@ import { IFooter } from '.';
             <mat-card-content class="container">
                 <div>
                     <p>{{ data.copyright }}</p>
-                    <p>Github: {{ data.github }}</p>
+                    <p>Github: <a [href]="data.github" target="_blank">Code</a></p>
                 </div>
                 <p>Version: {{ data.version }}</p>
                 <p>Powered by {{ data.powerby }}</p>

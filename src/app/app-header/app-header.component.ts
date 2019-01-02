@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, fromEvent, merge, Subject } from 'rxjs';
-import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IShape, RandomColorService, Shape, ShapeService } from '../services/';
 
 @Component({
@@ -149,13 +149,17 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(
                 startWith(true),
                 switchMap(action => (action ? increment$ : EMPTY)),
+                map(({ circleList, triangleList, squareList }) => ({
+                    circles: circleList,
+                    triangles: triangleList,
+                    squares: squareList,
+                })),
+                tap(({ circles, triangles, squares }) => {
+                    this.service.setShapeList({ circles, triangles, squares });
+                    this.shapeCounter = { circle: circles.length, square: squares.length, triangle: triangles.length };
+                }),
             )
-            .subscribe(results => {
-                const { circleList: circles, triangleList: triangles, squareList: squares } = results;
-                this.shapeCounter = { circle: circles.length, square: squares.length, triangle: triangles.length };
-                this.service.setShapeList({ circles, triangles, squares });
-                this.cd.markForCheck();
-            });
+            .subscribe(() => this.cd.markForCheck());
     }
 
     ngOnDestroy() {
