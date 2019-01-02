@@ -35,13 +35,13 @@ import { IShape, ShapeService } from '../services/shape.service';
         `
             :host {
                 display: grid;
-                grid-template-rows: repeat(3, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
 
             .container {
                 display: flex;
                 flex-direction: column;
-                padding: 0.5rem 1rem;
+                padding: 0.5rem;
             }
 
             .container .title {
