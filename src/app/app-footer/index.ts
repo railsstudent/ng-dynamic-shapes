@@ -1,5 +1,5 @@
 export interface IFooter {
-    copyright: string;
+    author: string;
     github: string;
     version: string;
     powerby: string;

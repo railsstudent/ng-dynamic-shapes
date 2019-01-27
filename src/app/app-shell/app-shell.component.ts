@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
     selector: 'app-shell',
@@ -25,8 +25,4 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppShellComponent implements OnInit {
-    constructor() {}
-
-    ngOnInit() {}
-}
+export class AppShellComponent {}

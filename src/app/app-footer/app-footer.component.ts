@@ -8,10 +8,28 @@ import { IFooter } from '.';
     selector: 'app-footer',
     template: `
         <ng-container *ngIf="(isSmallScreen$ | async); else web">
-            <app-footer-small [data]="data"></app-footer-small>
+            <app-footer-large [data]="data">
+                <div>
+                    <p>Author: {{ data.author }}</p>
+                    <p>Written in {{ data.powerby }}</p>
+                </div>
+                <div class="right">
+                    <p>Version: {{ data.version }}</p>
+                    <p>Github: <a [href]="data.github" target="_blank">Code</a></p>
+                </div>
+            </app-footer-large>
         </ng-container>
 
-        <ng-template #web> <app-footer-large [data]="data"></app-footer-large> </ng-template>
+        <ng-template #web>
+            <app-footer-large [data]="data">
+                <div>
+                    <p>Author: {{ data.author }}</p>
+                    <p>Written in {{ data.powerby }}</p>
+                </div>
+                <p>Version: {{ data.version }}</p>
+                <p>Github: <a [href]="data.github" target="_blank">Code</a></p>
+            </app-footer-large>
+        </ng-template>
     `,
     styles: [
         `
@@ -19,20 +37,8 @@ import { IFooter } from '.';
                 display: block;
             }
 
-            .container {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .mat-card-content {
-                color: #ff4081;
-                font-size: 1em;
-            }
-
-            .small {
-                flex-direction: column;
-                align-items: center;
-                justify-content: start;
+            .right {
+                text-align: right;
             }
         `,
     ],
@@ -42,10 +48,10 @@ export class AppFooterComponent implements OnInit {
     isSmallScreen$: Observable<boolean>;
 
     data: IFooter = {
-        copyright: 'Made by Connie Leung @2019',
+        author: `Connie Leung @${new Date().getFullYear()}`,
         github: 'https://github.com/railsstudent/ng-dynamic-shapes',
-        version: '0.0.2',
-        powerby: 'Angular 7',
+        version: '0.0.3',
+        powerby: 'Angular',
     };
 
     constructor(private breakpointObserver: BreakpointObserver) {}

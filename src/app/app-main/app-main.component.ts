@@ -107,9 +107,7 @@ export class AppMainComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.unsubscribe$) {
-            this.unsubscribe$.next();
-            this.unsubscribe$.complete();
-        }
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }

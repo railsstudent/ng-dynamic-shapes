@@ -1,18 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IFooter } from '.';
 
 @Component({
     selector: 'app-footer-large',
     template: `
         <mat-card class="mat-elevation-z4">
-            <mat-card-content class="container">
-                <div>
-                    <p>{{ data.copyright }}</p>
-                    <p>Github: <a [href]="data.github" target="_blank">Code</a></p>
-                </div>
-                <p>Version: {{ data.version }}</p>
-                <p>Powered by {{ data.powerby }}</p>
-            </mat-card-content>
+            <mat-card-content class="container"> <ng-content></ng-content> </mat-card-content>
         </mat-card>
     `,
     styles: [
@@ -30,11 +23,7 @@ import { IFooter } from '.';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppFooterLargeComponent implements OnInit {
+export class AppFooterLargeComponent {
     @Input()
     data: IFooter;
-
-    constructor() {}
-
-    ngOnInit() {}
 }
