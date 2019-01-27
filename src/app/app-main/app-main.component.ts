@@ -1,41 +1,57 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { IShape, ShapeService } from '../services/shape.service';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ShapeService } from '../services/shape.service';
 
 @Component({
     selector: 'app-main',
     template: `
-        <div class="container">
-            <div class="title">Circle</div>
-            <div class="list">
-                <div class="item" *ngFor="let c of circleList">
-                    <div class="{{ c.shape }}" [style.background]="c.color"></div>
+        <ng-container *ngIf="(className$ | async) as className">
+            <div class="{{ className }}">
+                <div class="container">
+                    <div class="title">Circle</div>
+                    <div class="list">
+                        <div class="item" *ngFor="let c of (shapeService.circle$ | async)">
+                            <div class="{{ c.shape }}" [style.background]="c.color"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="title">Triangle</div>
+                    <div class="list">
+                        <div class="item" *ngFor="let c of (shapeService.triangle$ | async)">
+                            <div class="{{ c.shape }}" [style.border-bottom-color]="c.color"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="title">Square</div>
+                    <div class="list">
+                        <div class="item" *ngFor="let c of (shapeService.square$ | async)">
+                            <div class="{{ c.shape }}" [style.background]="c.color"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="title">Triangle</div>
-            <div class="list">
-                <div class="item" *ngFor="let c of triangleList">
-                    <div class="{{ c.shape }}" [style.border-bottom-color]="c.color"></div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="title">Square</div>
-            <div class="list">
-                <div class="item" *ngFor="let c of squareList">
-                    <div class="{{ c.shape }}" [style.background]="c.color"></div>
-                </div>
-            </div>
-        </div>
+        </ng-container>
     `,
     styles: [
         `
             :host {
+                display: block;
+            }
+
+            div.vertical {
+                min-height: 100%;
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
+            }
+
+            div.horizontal {
+                min-height: 450px;
+                display: grid;
+                grid-template-rows: repeat(3, 1fr);
             }
 
             .container {
@@ -54,6 +70,7 @@ import { IShape, ShapeService } from '../services/shape.service';
                 grid-template-columns: repeat(auto-fill, 5em);
                 grid-auto-rows: 5em;
                 grid-gap: 3px;
+                margin-top: 15px;
             }
 
             .list .item {
@@ -81,33 +98,16 @@ import { IShape, ShapeService } from '../services/shape.service';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppMainComponent implements OnInit, OnDestroy {
-    private unsubscribe$ = new Subject();
-    circleList: IShape[] = [];
-    triangleList: IShape[] = [];
-    squareList: IShape[] = [];
+export class AppMainComponent implements OnInit {
+    isSmallScreen$: Observable<boolean>;
+    className$: Observable<string>;
 
-    constructor(private shapeService: ShapeService, private cd: ChangeDetectorRef) {}
+    constructor(public shapeService: ShapeService, private breakpointObserver: BreakpointObserver) {}
 
     ngOnInit() {
-        this.shapeService.circle$.pipe(takeUntil(this.unsubscribe$)).subscribe(ll => {
-            this.circleList = ll;
-            this.cd.markForCheck();
-        });
-
-        this.shapeService.triangle$.pipe(takeUntil(this.unsubscribe$)).subscribe(ll => {
-            this.triangleList = ll;
-            this.cd.markForCheck();
-        });
-
-        this.shapeService.square$.pipe(takeUntil(this.unsubscribe$)).subscribe(ll => {
-            this.squareList = ll;
-            this.cd.markForCheck();
-        });
-    }
-
-    ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
+        this.className$ = this.breakpointObserver.observe(['(max-width: 599px)']).pipe(
+            map(match => match.matches),
+            map(isSmall => (isSmall ? 'horizontal' : 'vertical')),
+        );
     }
 }
