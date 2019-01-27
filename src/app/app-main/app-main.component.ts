@@ -67,10 +67,15 @@ import { ShapeService } from '../services/shape.service';
 
             .list {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, 5em);
-                grid-auto-rows: 5em;
+                grid-template-columns: repeat(auto-fill, 4em);
+                grid-auto-rows: 4em;
                 grid-gap: 3px;
                 margin-top: 15px;
+            }
+
+            .horizontal .list {
+                grid-template-columns: repeat(auto-fill, 3em);
+                grid-auto-rows: 3em;
             }
 
             .list .item {
@@ -90,9 +95,15 @@ import { ShapeService } from '../services/shape.service';
             .triangle {
                 width: 0;
                 height: 0;
-                border-left: 2.4em solid transparent;
-                border-right: 2.4em solid transparent;
-                border-bottom: 4.8em solid black;
+                border-left: 2em solid transparent;
+                border-right: 2em solid transparent;
+                border-bottom: 4em solid black;
+            }
+
+            .horizontal .triangle {
+                border-left-width: 1.5em;
+                border-right-width: 1.5em;
+                border-bottom-width: 3em;
             }
         `,
     ],
