@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material';
 import { EMPTY, fromEvent, merge, Subject } from 'rxjs';
 import { map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IShape, RandomColorService, Shape, ShapeService } from '../services/';
@@ -37,6 +38,7 @@ import { IShape, RandomColorService, Shape, ShapeService } from '../services/';
                 </button>
                 <button id="resume" mat-raised-button color="accent">Resume</button>
                 <button id="pause" mat-raised-button color="warn">Pause</button>
+                <mat-slide-toggle (change)="change($event)">Speech</mat-slide-toggle>
             </mat-toolbar-row>
         </mat-toolbar>
     `,
@@ -160,6 +162,10 @@ export class AppHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
                 }),
             )
             .subscribe(() => this.cd.markForCheck());
+    }
+
+    change(event: MatSlideToggleChange) {
+        this.service.enableSpeech(event.checked);
     }
 
     ngOnDestroy() {

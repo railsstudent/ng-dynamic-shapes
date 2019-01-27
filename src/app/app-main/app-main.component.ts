@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { ShapeService } from '../services/shape.service';
 
 @Component({
@@ -109,9 +109,30 @@ import { ShapeService } from '../services/shape.service';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppMainComponent implements OnInit {
+export class AppMainComponent implements OnInit, OnDestroy {
     isSmallScreen$: Observable<boolean>;
     className$: Observable<string>;
+
+    isSpeechSupported = 'speechSynthesis' in window;
+    unsubscribe$ = new Subject();
+    voice: any;
+
+    private getVoices() {
+        if (this.isSpeechSupported) {
+            const synth = window.speechSynthesis;
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const voices = synth.getVoices();
+                    const engVoices = voices.filter(v => v.lang === 'en-US');
+                    if (engVoices.length) {
+                        return resolve(engVoices[0]);
+                    }
+                    return resolve(voices[0]);
+                }, 0);
+            });
+        }
+        return Promise.resolve(undefined);
+    }
 
     constructor(public shapeService: ShapeService, private breakpointObserver: BreakpointObserver) {}
 
@@ -120,5 +141,32 @@ export class AppMainComponent implements OnInit {
             map(match => match.matches),
             map(isSmall => (isSmall ? 'horizontal' : 'vertical')),
         );
+
+        if (this.isSpeechSupported) {
+            this.getVoices().then(voice => (this.voice = voice));
+            this.shapeService.speech$.pipe(takeUntil(this.unsubscribe$)).subscribe(text => {
+                this.speak(text);
+            });
+        }
+    }
+
+    speak(text: string) {
+        if (!this.isSpeechSupported || !this.shapeService.speechEnabled || !this.voice) {
+            return;
+        }
+        const synth = window.speechSynthesis;
+        if (synth.speaking) {
+            console.log('Speaking in progress');
+            return;
+        }
+
+        const utterThis = new SpeechSynthesisUtterance(text);
+        utterThis.voice = this.voice;
+        synth.speak(utterThis);
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }
